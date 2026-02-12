@@ -1,0 +1,6 @@
+[submodule "external/drogon"]
+	path = external/drogon
+	url = https://github.com/Iemand005/drogon.git
+[submodule "AIOne"]
+	path = AIOne
+	url = https://github.com/Iemand005/AIOne
