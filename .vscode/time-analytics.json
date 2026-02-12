@@ -1,7 +1,41 @@
 {
   "version": "1.0",
   "project": {
-    "totalFocusTime": 116611
+    "totalFocusTime": 700161,
+    "totalActiveTime": 50179
   },
-  "files": {}
+  "files": {
+    "AIOne/AIOne.qmlproject": {
+      "pending": 0,
+      "focus": 37350
+    },
+    "AIOne/TODO.md": {
+      "pending": 0,
+      "focus": 5118
+    },
+    "AIOne/external/stable-diffusion.cpp/vocab_mistral.hpp": {
+      "pending": 891,
+      "focus": 894
+    },
+    "AIOne/external/stable-diffusion.cpp/vocab_qwen.hpp": {
+      "pending": 24351,
+      "focus": 24351
+    },
+    "CMakeLists.txt": {
+      "pending": 21232,
+      "focus": 276362
+    },
+    "AIOne/CMakeLists.txt": {
+      "pending": 1838,
+      "focus": 53683
+    },
+    ".gitignore": {
+      "pending": 834,
+      "focus": 9228
+    },
+    "AIOne/.gitignore": {
+      "pending": 1033,
+      "focus": 23048
+    }
+  }
 }
