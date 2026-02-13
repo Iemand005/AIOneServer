@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "project": {
-    "totalFocusTime": 700161,
-    "totalActiveTime": 50179
+    "totalFocusTime": 1479409,
+    "totalActiveTime": 98588
   },
   "files": {
     "AIOne/AIOne.qmlproject": {
@@ -22,20 +22,32 @@
       "focus": 24351
     },
     "CMakeLists.txt": {
-      "pending": 21232,
-      "focus": 276362
+      "pending": 62447,
+      "focus": 909230
     },
     "AIOne/CMakeLists.txt": {
       "pending": 1838,
-      "focus": 53683
+      "focus": 59441
     },
     ".gitignore": {
       "pending": 834,
-      "focus": 9228
+      "focus": 36275
     },
     "AIOne/.gitignore": {
       "pending": 1033,
       "focus": 23048
+    },
+    "external/Crow/CMakeLists.txt": {
+      "pending": 0,
+      "focus": 9929
+    },
+    "src/server.cpp": {
+      "pending": 7194,
+      "focus": 100934
+    },
+    "build/wxWidgets/exports/drogon/exports.h": {
+      "pending": 0,
+      "focus": 2061
     }
   }
 }
