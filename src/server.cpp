@@ -8,7 +8,7 @@ int main() {
 
   CROW_ROUTE(app, "/")([](){
     // return "Heeey" ;
-    auto page = crow::mustache::load_text("C:\\Users\\Lasse\\Documents\\Projects\\AIOneWeb\\src\\front\\index.html");
+    auto page = crow::mustache::load_text("index.html");
     return page;
   });
 
