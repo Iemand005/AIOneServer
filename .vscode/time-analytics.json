@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "project": {
+    "totalFocusTime": 323828,
+    "totalActiveTime": 17145
+  },
+  "files": {
+    "src/front/index.html": {
+      "pending": 0,
+      "focus": 42502
+    },
+    "src/server.cpp": {
+      "pending": 11560,
+      "focus": 145355
+    },
+    "CMakeLists.txt": {
+      "pending": 5585,
+      "focus": 90336
+    }
+  }
+}

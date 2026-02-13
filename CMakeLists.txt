@@ -22,3 +22,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     AIOne::Core
     Crow::Crow
 )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")

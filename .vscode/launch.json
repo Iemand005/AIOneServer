@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CMake Debug (MSVC)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": [],
+      "cwd": "${command:cmake.launchTargetDirectory}",
+      "stopAtEntry": false,
+      "preLaunchTask": "CMake: build"
+    },
+    {
+      "name": "CMake Debug (MSVC) - Vulkan",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": [],
+      "cwd": "${command:cmake.launchTargetDirectory}",
+      "stopAtEntry": false,
+      "preLaunchTask": "CMake: build",
+      "environment": [
+        {
+          "name": "AIONE_VULKAN",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}
