@@ -10,6 +10,7 @@ add_subdirectory(${AIONE_DIR})
 
 set(ASIO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/asio" CACHE STRING "" FORCE)
 
+include_directories("external/asio/include")
 add_subdirectory("external/Crow")
 
 
