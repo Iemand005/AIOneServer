@@ -1,12 +1,6 @@
-[submodule "external/drogon"]
-	path = external/drogon
-	url = https://github.com/Iemand005/drogon.git
-[submodule "AIOne"]
-	path = AIOne
-	url = https://github.com/Iemand005/AIOne
-[submodule "external/Crow"]
-	path = external/Crow
-	url = https://github.com/CrowCpp/Crow.git
-[submodule "external/asio"]
-	path = external/asio
-	url = https://github.com/Iemand005/asio.git
+[submodule "external/cpp-httplib"]
+	path = external/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib
+[submodule "external/json"]
+	path = external/json
+	url = https://github.com/nlohmann/json

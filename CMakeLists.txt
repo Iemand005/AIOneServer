@@ -1,26 +1,42 @@
-cmake_minimum_required(VERSION 3.16)
-project(AIOneWeb VERSION 0.1 LANGUAGES CXX C)
+cmake_minimum_required(VERSION 3.20)
+project(AIOneServer VERSION 1.0.0 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-
-set(AIONE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AIOne")
-
-add_subdirectory(${AIONE_DIR})
-
-
-set(ASIO_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/asio" CACHE STRING "" FORCE)
-
-include_directories("external/asio/include")
-add_subdirectory("external/Crow")
-
-
-file(GLOB APP_SOURCES src/*.cpp)
-
-add_executable(${PROJECT_NAME} ${APP_SOURCES})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    AIOne::Core
-    Crow::Crow
+# Generate version file
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Version.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/src/Version.hpp"
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
+
+# For metaproject
+set(GIT_EXECUTABLE "GIT_EXECUTABLE-NOTFOUND" CACHE FILEPATH "Disable Git tracking in dependencies" FORCE)
+if(NOT TARGET AIOneCore)
+    add_subdirectory("../AIOne" "${CMAKE_CURRENT_BINARY_DIR}/AIOne")
+endif()
+
+# Dependencies
+add_subdirectory("external/cpp-httplib" "${CMAKE_CURRENT_BINARY_DIR}/external_cpp-httplib")
+add_subdirectory("external/json" "${CMAKE_CURRENT_BINARY_DIR}/external_json")
+
+
+# Find all source files
+file(GLOB_RECURSE CORE_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
+)
+
+# Find all header files
+file(GLOB_RECURSE CORE_HEADERS CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+)
+
+# Compile exe
+add_executable(AIOneServer ${CORE_SOURCES})
+
+# Include header files
+target_include_directories(AIOneServer PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(AIOneServer PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/src")
+target_link_libraries(AIOneServer PRIVATE AIOneCore) 
+target_link_libraries(AIOneServer PRIVATE httplib::httplib)
+target_link_libraries(AIOneServer PRIVATE nlohmann_json::nlohmann_json)
