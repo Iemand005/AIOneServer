@@ -1,19 +1,16 @@
-#include "httplib.h"
+#include <httplib.h>
 #include <nlohmann/json.hpp>
+
+#include "AIOneServer.hpp"
+#include "RoutesLLM.hpp"
 
 using json = nlohmann::json;
 
 int main() {
-    httplib::Server svr;
+    httplib::Server httpServer;
+    AIOneServer server(&httpServer);
 
-    svr.Post("/api/hello", [](const httplib::Request& req, httplib::Response& res) {
-        json req_json = json::parse(req.body, nullptr, false);
-        
-        json res_json;
-        res_json["message"] = "Hello " + req_json.value("name", "User");
-        
-        res.set_content(res_json.dump(), "application/json");
-    });
+    registerRoutesLLM(server);
 
-    svr.listen("0.0.0.0", 8080);
+    httpServer.listen("0.0.0.0", 8080);
 }
