@@ -1,13 +1,21 @@
 #pragma once
+#include <string>
 #include <httplib.h>
 #include <nlohmann/json.hpp>
+#include <ModelFactory.hpp>
 
 #include "Types.hpp"
+#include "ModelsBundle.hpp"
+
+#define SET_PROP_TO_JSON_VAL(_obj, _type, _target, _prop) \
+    if (server.mustHave(_obj, #_prop, JsonType::T_##_type)) _target._prop = server.k##_type(_obj, #_prop);
 
 class AIOneServer {
 public:
 
     httplib::Server *server;
+    ModelFactory modelFactory;
+    ModelsBundle bundle;
 
     AIOneServer(httplib::Server *server) : server(server) {}
 
@@ -26,21 +34,23 @@ public:
 
         json val = obj[key];
 
-        if (type == JsonType::T_NULL) {
+        if (type == JsonType::T_Null) {
             return val.is_null();
-        } else if (type == JsonType::T_OBJECT) {
+        } else if (type == JsonType::T_Object) {
             return val.is_object();
-        } else if (type == JsonType::T_ARRAY) {
+        } else if (type == JsonType::T_Array) {
             return val.is_array();
-        } else if (type == JsonType::T_STRING) {
+        } else if (type == JsonType::T_String) {
             return val.is_string();
-        } else if (type == JsonType::T_BOOL) {
+        } else if (type == JsonType::T_Bool) {
             return val.is_boolean();
-        } else if (type == JsonType::T_INT) {
+        } else if (type == JsonType::T_Int) {
             return val.is_number() && !val.is_number_float();
-        } else if (type == JsonType::T_UINT) {
+        } else if (type == JsonType::T_Uint) {
             return val.is_number_unsigned();
-        } else if (type == JsonType::T_FLOAT) {
+        } else if (type == JsonType::T_Float) {
+            return val.is_number();
+        } else if (type == JsonType::T_Double) {
             return val.is_number();
         }
 
@@ -101,7 +111,7 @@ private:
 
             bool isStreaming = false;
             if (streamHandler != nullptr) {
-                if (mustHave(body, "stream", JsonType::T_BOOL)) {
+                if (mustHave(body, "stream", JsonType::T_Bool)) {
                     isStreaming = kBool(body, "stream");
                 }
             }
