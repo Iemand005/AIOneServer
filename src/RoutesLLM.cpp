@@ -9,17 +9,56 @@
 #include "Utils.hpp"
 
 void registerRoutesLLM(AIOneServer &server) {
-    server.POST("/aio/llm/load", [&server](const httplib::Request *req, httplib::Response *res, json &body, bool stream, SSEWriter *writer) -> const char * {
-        bool run = (!stream || writer != nullptr);
-
+    server.POST("/aio/llm/register", [&server](const httplib::Request &req, httplib::Response &res, json &body) -> const char * {
         if (!server.mustHave(body, "id", JsonType::T_FilledString)) return "id";
         if (!server.mustHave(body, "path", JsonType::T_FilledString)) return "path";
 
         std::string modelId = server.kString(body, "id");
         std::string path = server.kString(body, "path");
 
-        if (server.bundle.models.find(modelId) != server.bundle.models.end()) {
-            throw std::runtime_error("model with this id is already loaded");
+        if (hasKey(server.bundle.registeredIds, modelId)) {
+            throw std::runtime_error("Model with this id is already registered");
+        }
+        
+        RegisteredModel entry = {
+            /* .id   = */ modelId,
+            /* .path = */ path,
+            /* .type = */ HostableModelType::LLM
+        };
+        server.bundle.registeredIds[modelId] = entry;
+
+        json jsonRes;
+        jsonRes["success"] = true;
+        res.set_content(jsonRes.dump(), "application/json");
+        return nullptr;
+    });
+
+    server.POST("/aio/llm/load", [&server](const httplib::Request *req, httplib::Response *res, json &body, bool stream, SSEWriter *writer) -> const char * {
+        bool run = (!stream || writer != nullptr);
+
+        if (!server.mustHave(body, "id", JsonType::T_FilledString)) return "id";
+
+        std::string modelId = server.kString(body, "id");
+        if (hasKey(server.bundle.models, modelId)) {
+            throw std::runtime_error("Model with this id is already loaded");
+        }
+
+        std::string path;
+        
+        if (server.mustHave(body, "path", JsonType::T_FilledString)) {
+            path = server.kString(body, "path");
+        } else {
+            // find registered model
+            if (!hasKey(server.bundle.registeredIds, modelId)) {
+                throw std::runtime_error("Model with this id was not registered and no path was given");
+            }
+
+            const RegisteredModel &entry = server.bundle.registeredIds[modelId];
+            if (entry.type != HostableModelType::LLM) {
+                throw std::runtime_error("Registered model with this id is not an llm");
+            }
+
+            path = entry.path;
         }
 
 
@@ -70,9 +109,9 @@ void registerRoutesLLM(AIOneServer &server) {
 
         std::string modelId = server.kString(body, "id");
         
-        HostableModel *model = server.bundle.find(modelId);
+        HostableModel *model = server.bundle.findModel(modelId);
         if (model == nullptr) {
-            throw std::runtime_error("model with this id is not loaded");
+            throw std::runtime_error("Model with this id is not loaded");
         }
 
         model->free();

@@ -38,11 +38,18 @@ struct HostableModel {
     }
 };
 
+struct RegisteredModel {
+    std::string id = "";
+    std::string path = "";
+    HostableModelType type = HostableModelType::Unknown;
+};
+
 class ModelsBundle {
 public:
     std::unordered_map<std::string, HostableModel> models;
+    std::unordered_map<std::string, RegisteredModel> registeredIds;
     
-    HostableModel *find(std::string id) {
+    HostableModel *findModel(std::string id) {
         auto it = models.find(id);
         if (it != models.end()) {
             return &it->second;

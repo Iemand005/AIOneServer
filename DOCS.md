@@ -1,5 +1,11 @@
 # Documentation
 
+```ts
+type FailureResponse = {
+    error: string
+};
+```
+
 ## Generic routes
 
 Base path: `/aio/`
@@ -19,6 +25,8 @@ type GetInfoResponse = {
 
 ### Get loaded models
 
+Includes both loaded models and unloaded but registered models.
+
 | Property | Value |
 | --- | --- |
 | Name | `models` |
@@ -28,7 +36,7 @@ type GetInfoResponse = {
 type SummarizedModel = {
     id: string,
     type: "llm" | "sd" | "tts" | "unknown",
-    loaded: boolean
+    loaded: boolean // if false, model is registered and not loaded
 };
 
 type GetModelsResponse = SummarizedModel[];
@@ -37,6 +45,29 @@ type GetModelsResponse = SummarizedModel[];
 ## LLM routes
 
 Base path: `/aio/llm/`
+
+### Register model
+
+Registering a model won't load it, but it will allow you to use only the ID for loading it.
+Pretty much just mapping the ID to a file so you don't have to enter the file path everytime you load the model.
+
+| Property | Value |
+| --- | --- |
+| Name | `register` |
+| Method | POST |
+
+```ts
+type RegisterModelRequest = {
+    id: string,
+    path: string
+};
+```
+
+```ts
+type RegisterModelResponse = {
+    success: true
+};
+```
 
 ### Load model
 
@@ -48,7 +79,7 @@ Base path: `/aio/llm/`
 ```ts
 type LoadModelRequest = {
     id: string,
-    path: string
+    path?: string // if not supplied, model must be registered with id
 };
 ```
 
