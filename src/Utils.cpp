@@ -2,6 +2,8 @@
 #include <string>
 #include <PreferredDevice.h>
 
+#include "ModelsBundle.hpp"
+
 PreferredDevice getPreferredDevice(std::string deviceStr) {
     if (deviceStr == "cpu") {
         return PreferredDevice::CPU;
@@ -15,3 +17,16 @@ PreferredDevice getPreferredDevice(std::string deviceStr) {
         return PreferredDevice::ANY;
     }
 }
+
+std::string getHostableModelType(HostableModelType type) {
+    if (type == HostableModelType::LLM) {
+        return "llm";
+    } else if (type == HostableModelType::SD) {
+        return "sd";
+    } else if (type == HostableModelType::TTS) {
+        return "tts";
+    } else {
+        return "unknown";
+    }
+}
+

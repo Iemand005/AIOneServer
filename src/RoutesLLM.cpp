@@ -5,14 +5,18 @@
 
 #include "Types.hpp"
 #include "AIOneServer.hpp"
+#include "ModelsBundle.hpp"
 #include "Utils.hpp"
 
 void registerRoutesLLM(AIOneServer &server) {
     server.POST("/aio/llm/load", [&server](const httplib::Request *req, httplib::Response *res, json &body, bool stream, SSEWriter *writer) -> const char * {
-        if (!server.mustHave(body, "path", JsonType::T_String)) return "path";
-
-        std::string path = server.kString(body, "path");
         bool run = (!stream || writer != nullptr);
+
+        if (!server.mustHave(body, "id", JsonType::T_FilledString)) return "id";
+        if (!server.mustHave(body, "path", JsonType::T_FilledString)) return "path";
+
+        std::string modelId = server.kString(body, "id");
+        std::string path = server.kString(body, "path");
 
 
         if (run) {
@@ -30,13 +34,17 @@ void registerRoutesLLM(AIOneServer &server) {
             if (stream) {
                 options.onProgress = [&writer](const float progress, const int step, const int steps) {
                     json packet = {
+                        {"type", "progress"},
                         {"progress", progress}
                     };
                     writer->write(packet.dump());
                 };
             }
 
-            server.bundle.llms.push_back(server.modelFactory.loadLLM(path, options));
+
+            HostableModel model = {modelId, HostableModelType::LLM};
+            model.llm = server.modelFactory.loadLLM(path, options);
+            server.bundle.models[modelId] = std::move(model);
 
             json jsonRes;
             jsonRes["success"] = true;
@@ -44,6 +52,7 @@ void registerRoutesLLM(AIOneServer &server) {
             if (!stream) {
                 res->set_content(jsonRes.dump(), "application/json");
             } else {
+                jsonRes["type"] = "done";
                 writer->write(jsonRes.dump());
                 writer->finish();
             }

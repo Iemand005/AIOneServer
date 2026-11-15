@@ -42,6 +42,8 @@ public:
             return val.is_array();
         } else if (type == JsonType::T_String) {
             return val.is_string();
+        } else if (type == JsonType::T_FilledString) {
+            return val.is_string() && !val.get<std::string>().empty();
         } else if (type == JsonType::T_Bool) {
             return val.is_boolean();
         } else if (type == JsonType::T_Int) {
@@ -67,6 +69,11 @@ public:
 
     std::string kString(json &obj, const char *key) const {
         return obj[key].get<std::string>();
+    }
+
+    /** Use `kString` instead for consistency. Only here for SET_PROP_TO_JSON_VAL macro. */
+    std::string kFilledString(json &obj, const char *key) const {
+        return kString(obj, key);
     }
 
     bool kBool(json &obj, const char *key) const {

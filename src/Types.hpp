@@ -35,18 +35,18 @@ public:
     }
 };
 
-using StreamHandler = std::function<const char *(const httplib::Request *, httplib::Response *, bool, SSEWriter *)>;
 using BodyableStreamHandler = std::function<const char *(const httplib::Request *, httplib::Response *, json &, bool, SSEWriter *)>;
 
 enum class JsonType : uint8_t
 {
-    T_Null,    ///< null value
-    T_Object,  ///< object (unordered set of name/value pairs)
-    T_Array,   ///< array (ordered collection of values)
-    T_String,  ///< string value
-    T_Bool,    ///< boolean value
-    T_Int,     ///< number value (signed integer)
-    T_Uint,    ///< number value (unsigned integer)
-    T_Float,   ///< number value (floating-point)
-    T_Double   ///< number value (floating-point)
+    T_Null,          ///< null value
+    T_Object,        ///< object (unordered set of name/value pairs)
+    T_Array,         ///< array (ordered collection of values)
+    T_String,        ///< string value
+    T_FilledString,  ///< string value (non-empty)
+    T_Bool,          ///< boolean value
+    T_Int,           ///< number value (signed integer)
+    T_Uint,          ///< number value (unsigned integer)
+    T_Float,         ///< number value (floating-point)
+    T_Double,        ///< number value (floating-point)
 };
