@@ -25,7 +25,8 @@ void registerRoutesGeneric(AIOneServer &server) {
         for (const auto &[id, model] : server.bundle.models) {
             json modelJson = {
                 {"id", model.id},
-                {"type", getHostableModelType(model.type)}
+                {"type", getHostableModelType(model.type)},
+                {"loaded", true} // TODO can be loadable model in the future
             };
 
             jsonRes.push_back(modelJson);

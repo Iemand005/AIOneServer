@@ -24,6 +24,18 @@ struct HostableModel {
     HostableModel& operator=(const HostableModel &) = delete; // don't allow copy
     HostableModel(HostableModel&&) = default;                 // allow move
     HostableModel& operator=(HostableModel&&) = default;      // allow move
+
+    void free() {
+        // TODO await lock or smth?
+        
+        if ((type == HostableModelType::LLM || type == HostableModelType::Unknown) && llm != nullptr) {
+            llm = nullptr;
+        } else if ((type == HostableModelType::SD || type == HostableModelType::Unknown) && sd != nullptr) {
+            sd = nullptr;
+        } else if ((type == HostableModelType::TTS || type == HostableModelType::Unknown) && tts != nullptr) {
+            tts = nullptr;
+        }
+    }
 };
 
 class ModelsBundle {

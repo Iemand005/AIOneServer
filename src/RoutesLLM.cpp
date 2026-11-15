@@ -18,6 +18,10 @@ void registerRoutesLLM(AIOneServer &server) {
         std::string modelId = server.kString(body, "id");
         std::string path = server.kString(body, "path");
 
+        if (server.bundle.models.find(modelId) != server.bundle.models.end()) {
+            throw std::runtime_error("model with this id is already loaded");
+        }
+
 
         if (run) {
             LLModelOptions options;
@@ -58,6 +62,25 @@ void registerRoutesLLM(AIOneServer &server) {
             }
         }
 
+        return nullptr;
+    });
+
+    server.POST("/aio/llm/unload", [&server](const httplib::Request &req, httplib::Response &res, json &body) -> const char * {
+        if (!server.mustHave(body, "id", JsonType::T_FilledString)) return "id";
+
+        std::string modelId = server.kString(body, "id");
+        
+        HostableModel *model = server.bundle.find(modelId);
+        if (model == nullptr) {
+            throw std::runtime_error("model with this id is not loaded");
+        }
+
+        model->free();
+        server.bundle.models.erase(modelId);
+
+        json jsonRes;
+        jsonRes["success"] = true;
+        res.set_content(jsonRes.dump(), "application/json");
         return nullptr;
     });
 }

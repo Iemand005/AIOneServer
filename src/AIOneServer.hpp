@@ -123,7 +123,16 @@ private:
                 }
             }
 
-            const char *validation = (streamHandler != nullptr ? streamHandler(&req, &res, body, isStreaming, nullptr) : handler(req, res, body));
+            const char *validation;
+            try {
+                validation = (streamHandler != nullptr ? streamHandler(&req, &res, body, isStreaming, nullptr) : handler(req, res, body));
+            } catch (const std::runtime_error& e) {
+                json jsonRes;
+                jsonRes["error"] = std::string(e.what());
+                res.status = 400;
+                res.set_content(jsonRes.dump(), "application/json");
+                return;
+            }
 
             if (validation != nullptr) {
                 json jsonRes;
