@@ -34,7 +34,7 @@ Includes both loaded models and unloaded but registered models.
 
 ```ts
 type SummarizedModel = {
-    id: string,
+    modelId: string,
     type: "llm" | "sd" | "tts" | "unknown",
     loaded: boolean // if false, model is registered and not loaded
 };
@@ -58,7 +58,7 @@ Pretty much just mapping the ID to a file so you don't have to enter the file pa
 
 ```ts
 type RegisterModelRequest = {
-    id: string,
+    modelId: string,
     path: string
 };
 ```
@@ -78,7 +78,7 @@ type RegisterModelResponse = {
 
 ```ts
 type LoadModelRequest = {
-    id: string,
+    modelId: string,
     path?: string // if not supplied, model must be registered with id
 };
 ```
@@ -98,12 +98,37 @@ type LoadModelResponse = {
 
 ```ts
 type UnloadModelRequest = {
-    id: string
+    modelId: string
 };
 ```
 
 ```ts
 type UnloadModelResponse = {
     success: true
+};
+```
+
+### Create new managed context
+
+Creates a new context or multiple, used for prompt caching.
+When generating using a managed context, the prompt caching will be stored in that context and can be reused.
+Reusing it removes the tokens which do not match what was catched (so it only keeps the last generated prompt as cache).
+
+| Property | Value |
+| --- | --- |
+| Name | `context` |
+| Method | POST |
+
+```ts
+type CreateContextRequest = {
+    modelId: string,
+    amount?: number // amount of contexts to create, default 1
+};
+```
+
+```ts
+type CreateContextResponse = {
+    success: true,
+    ctxIds: string[] // uuids
 };
 ```

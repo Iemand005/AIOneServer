@@ -24,10 +24,19 @@ void registerRoutesGeneric(AIOneServer &server) {
 
         for (const auto &[id, model] : server.bundle.models) {
             json modelJson = {
-                {"id", model.id},
+                {"modelId", model.id},
                 {"type", getHostableModelType(model.type)},
-                {"loaded", true}
+                {"loaded", true},
             };
+
+            if (model.type == HostableModelType::LLM) {
+                json ctxIds = json::array();
+                for (const auto &[ctxId, ctx] : model.contexts) {
+                    ctxIds.push_back(ctx.id);
+                }
+                
+                modelJson["ctxIds"] = ctxIds;
+            }
 
             jsonRes.push_back(modelJson);
         }
@@ -39,7 +48,7 @@ void registerRoutesGeneric(AIOneServer &server) {
             }
 
             json modelJson = {
-                {"id", entry.id},
+                {"modelId", entry.id},
                 {"type", getHostableModelType(entry.type)},
                 {"loaded", false}
             };

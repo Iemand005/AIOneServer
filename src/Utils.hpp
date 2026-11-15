@@ -18,3 +18,5 @@ template <typename... Args>
 bool hasKey(const std::vector<Args...>& vec, const std::string& key) {
     return std::find(vec.begin(), vec.end(), key) != vec.end();
 }
+
+std::string uuidv4();

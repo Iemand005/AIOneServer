@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 
 #include <LLModel.hpp>
 #include <SDModel.hpp>
@@ -12,9 +13,16 @@ enum class HostableModelType {
     TTS,
 };
 
+struct RegisteredContext {
+    std::string id = "";
+    std::shared_ptr<TextContext> modelCtx;
+};
+
 struct HostableModel {
     std::string id = "";
     HostableModelType type = HostableModelType::Unknown;
+    std::unordered_map<std::string, RegisteredContext> contexts;
+
     LLModelPtr llm = nullptr;
     SDModelPtr sd = nullptr;
     TTSModelPtr tts = nullptr;
@@ -49,12 +57,21 @@ public:
     std::unordered_map<std::string, HostableModel> models;
     std::unordered_map<std::string, RegisteredModel> registeredIds;
     
-    HostableModel *findModel(std::string id) {
+    HostableModel *findModel(const std::string &id) {
         auto it = models.find(id);
         if (it != models.end()) {
             return &it->second;
         }
 
         return nullptr;
+    }
+
+    HostableModel *findModel(const std::string &id, HostableModelType type) {
+        HostableModel *model = findModel(id);
+        if (model->type != type) {
+            return nullptr;
+        }
+
+        return model;
     }
 };
